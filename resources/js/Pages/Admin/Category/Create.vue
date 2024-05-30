@@ -30,7 +30,7 @@ const addCategory = () => {
       } else if (usePage().props.flash.failed) {
         toast.error(flashFailed, options);
       } else {
-        toast.error("Something Went Wrong!", options);
+        console.log("Something Went Wrong!");
       }
     },
   });

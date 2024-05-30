@@ -360,7 +360,7 @@ const { hasRole } = usePermission();
                 <li class="nav-item">
                   <Link :href="route('role.index')" class="nav-link">
                     <i class="far fa-circle nav-icon"></i>
-                    <p>Demo</p>
+                    <p>Add New Role</p>
                   </Link>
                 </li>
               </ul>
@@ -377,7 +377,7 @@ const { hasRole } = usePermission();
                 <li class="nav-item">
                   <Link :href="route('permission.index')" class="nav-link">
                     <i class="far fa-circle nav-icon"></i>
-                    <p>Demo</p>
+                    <p>Add New Permission</p>
                   </Link>
                 </li>
               </ul>

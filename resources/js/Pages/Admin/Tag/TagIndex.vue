@@ -27,18 +27,19 @@ const options = {
 
 const createTag = (event) => {
   form.post(route("tag.store"), {
-    preserveScroll: true,
+    preserveScroll: (page) => Object.keys(page.props.errors).length,
     onFinish: (visit) => {
       if (usePage().props.flash.success) {
         router.visit(route("tag.index"), {
           only: ["tags"],
+          preserveScroll: true,
         });
         toast.success(flashSuccess, options);
         form.reset();
       } else if (usePage().props.flash.failed) {
         toast.error(flashFailed, options);
       } else {
-        toast.error("Something Went Wrong!", options);
+        console.log("Something Went Wrong!");
       }
     },
   });
@@ -86,17 +87,9 @@ watch(() => props?.tags);
   <AdminLayout>
     <div class="row justify-content-center">
       <div class="col-lg-8">
-        <div class="card card-light mt-3">
+        <div class="mt-3 card card-light">
           <div class="card-header">
-            <h4>
-              Tag List
-              <Link
-                :href="route('tag.create')"
-                class="btn btn-secondary float-right"
-                as="button"
-                >New Tag</Link
-              >
-            </h4>
+            <h4>Tag List</h4>
           </div>
           <div class="card-body">
             <table id="example2" class="table table-bordered table-striped table-hover">
@@ -112,8 +105,8 @@ watch(() => props?.tags);
                   <td>{{ index + 1 }}</td>
                   <td>{{ tag.tag_name }}</td>
                   <td>
-                    <Link href="" as="button" class="btn btn-outline-info m-1">Edit</Link>
-                    <Link href="" as="button" class="btn btn-outline-danger m-1"
+                    <Link href="" as="button" class="m-1 btn btn-outline-info">Edit</Link>
+                    <Link href="" as="button" class="m-1 btn btn-outline-danger"
                       >Delete</Link
                     >
                   </td>
@@ -125,18 +118,9 @@ watch(() => props?.tags);
         </div>
       </div>
       <div class="col-lg-4">
-        <div class="card card-light mt-3">
+        <div class="mt-3 card card-light">
           <div class="card-header">
-            <h4>
-              Create New Tag
-              <Link
-                :href="route('tag.index')"
-                class="btn btn-secondary float-right"
-                as="button"
-              >
-                Go Back
-              </Link>
-            </h4>
+            <h4>Create New Tag</h4>
           </div>
           <div class="card-body">
             <form @submit.prevent="createTag()">

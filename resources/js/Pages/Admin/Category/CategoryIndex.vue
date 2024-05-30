@@ -61,13 +61,13 @@ watch(() => props?.categories);
   <AdminLayout>
     <div class="row justify-content-center">
       <div class="col-lg-10">
-        <div class="card card-light mt-3">
+        <div class="mt-3 card card-light">
           <div class="card-header">
             <h4>
               Category List
               <Link
                 :href="route('category.create')"
-                class="btn btn-secondary float-right"
+                class="float-right btn btn-secondary"
                 as="button"
                 >New Category</Link
               >
@@ -107,7 +107,7 @@ watch(() => props?.categories);
                     <Link
                       @click="categoryDelete(category.id)"
                       as="button"
-                      class="btn btn-outline-danger ml-2"
+                      class="ml-2 btn btn-outline-danger"
                     >
                       Delete
                     </Link>

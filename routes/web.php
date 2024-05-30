@@ -46,9 +46,20 @@ Route::middleware('auth')->group(function () {
     Route::get('/tag/create', [TagController::class, 'create'])->name('tag.create');
     Route::post('/tag/store', [TagController::class, 'store'])->name('tag.store');
 
-//    Roles And Permission
-    Route::get('/roles', [RoleController::class, 'index'])->name('role.index');
+    // Roles Routes List
+    Route::get('/role', [RoleController::class, 'index'])->name('role.index');
+    Route::post('/role/store', [RoleController::class, 'store'])->name('role.store');
+    Route::get('/role/edit/{role_id}', [RoleController::class, 'edit'])->name('role.edit');
+    Route::post('/role/update/{role_id}', [RoleController::class, 'update'])->name('role.update');
+    Route::get('/role/delete/{role_id}', [RoleController::class, 'destroy'])->name('role.delete');
+
+
+    // Permissions Routes List
     Route::get('/permissions', [PermissionController::class, 'index'])->name('permission.index');
+    Route::post('/permission/store', [PermissionController::class, 'store'])->name('permission.store');
+    Route::get('/permission/edit/{permission_id}', [PermissionController::class, 'edit'])->name('permission.edit');
+    Route::post('/permission/update/{permission_id}', [PermissionController::class, 'update'])->name('permission.update');
+    Route::get('/permission/delete/{permission_id}', [PermissionController::class, 'destroy'])->name('permission.delete');
 });
 
 

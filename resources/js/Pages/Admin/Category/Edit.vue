@@ -95,7 +95,7 @@ const handleImageUpload = async (event) => {
             </h4>
           </div>
           <div class="card-body">
-            <form @submit.prevent="updateCategory()">
+            <form @submit.prevent="updateCategory">
               <div class="form-group">
                 <label for="inputName" class="col-form-label">Category Name</label>
                 <input

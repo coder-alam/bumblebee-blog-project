@@ -37,7 +37,7 @@ const submit = () => {
       } else if (usePage().props.flash.failed) {
         toast.error(flashFailed, options);
       } else {
-        toast.warning("Something went wrong!", options);
+        console.log("Something Went Wrong!");
       }
     },
   });
@@ -57,11 +57,8 @@ const submitImg = () => {
       } else if (usePage().props.flash.failed) {
         toast.error(flashFailed, options);
       } else {
-        toast.error("Something went wrong!", options);
+        console.log("Something Went Wrong!");
       }
-    },
-    onError: (response) => {
-      toast.error(props.errors.avatar, options);
     },
   });
 };
