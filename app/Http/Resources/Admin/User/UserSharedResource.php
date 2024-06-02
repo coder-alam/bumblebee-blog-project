@@ -2,12 +2,10 @@
 
 namespace App\Http\Resources\Admin\User;
 
-use App\Http\Resources\Admin\Permission\PermissionResource;
-use App\Http\Resources\Admin\Role\RoleResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class UserResource extends JsonResource {
+class UserSharedResource extends JsonResource {
     /**
      * Transform the resource into an array.
      *
@@ -19,9 +17,8 @@ class UserResource extends JsonResource {
             'name' => $this->name,
             'email' => $this->email,
             'photo' => $this->photo,
-            'roles' => RoleResource::collection($this->whenLoaded('roles')),
-            'permissions' => PermissionResource::collection($this->whenLoaded('permissions')),
+            'roles' => $this->getRoleNames(),
+            'permissions' => $this->getPermissionNames(),
         ];
     }
-
 }

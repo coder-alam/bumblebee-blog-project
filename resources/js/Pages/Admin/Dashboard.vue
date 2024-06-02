@@ -1,7 +1,15 @@
 <script setup>
 import AdminLayout from "@/Layouts/AdminLayout.vue";
-import { Head } from "@inertiajs/vue3";
+import { Head, router } from "@inertiajs/vue3";
+import { ref, onMounted, computed, defineProps, watch } from "vue";
+
+onMounted(() => {
+  router.visit(route("dashboard"), {
+    preserveScroll: true,
+  });
+});
 </script>
+
 <template>
   <Head title="Dashboard" />
   <AdminLayout>

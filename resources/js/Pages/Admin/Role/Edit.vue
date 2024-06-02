@@ -28,14 +28,33 @@ const options = {
   position: toast.POSITION.TOP_CENTER,
   theme: "colored",
 };
-watch(() => {
-  () => props.role, () => (form.role_name = props.role?.name);
-});
+
 const updateRole = () => {
   form.post(route("role.update", props.role.id), {
     preserveScroll: (page) => Object.keys(page.props.errors).length,
     onSuccess: () => {
       //   form.reset();
+      if (usePage().props.flash.success) {
+        router.visit(route("role.edit", props.role.id), {
+          only: {
+            role: true,
+            permissions: true,
+          },
+          preserveScroll: true,
+        });
+        toast.success(flashSuccess, options);
+      } else if (usePage().props.flash.failed) {
+        toast.error(flashFailed, options);
+      } else {
+        toast.error("Something Went Wrong!", options);
+      }
+    },
+  });
+};
+const deletePermission = ([role_id, permission_id]) => {
+  form.delete(route("role.permission.destroy", [role_id, permission_id]), {
+    preserveScroll: true,
+    onSuccess: () => {
       if (usePage().props.flash.success) {
         toast.success(flashSuccess, options);
       } else if (usePage().props.flash.failed) {
@@ -46,6 +65,30 @@ const updateRole = () => {
     },
   });
 };
+
+onMounted(() => {
+  // Data Table Section
+  let items = props?.permissions;
+  $("#example2").DataTable({
+    scrollY: items.length > 5 ? 400 : "",
+    order: false,
+    paging: true,
+    searching: true,
+    lengthChange: true,
+    // lengthMenu: [5, 10, 20, 50],
+    lengthMenu: [
+      [5, 10, 25, 50, 100, -1],
+      [5, 10, 25, 50, 100, "All"],
+    ],
+  });
+  $(".dataTables_length").addClass("bs-select");
+
+  form.permissions = props.role?.permissions;
+});
+watch(
+  () => props.role,
+  () => (form.permissions = props.role?.permissions)
+);
 </script>
 
 <template>
@@ -64,7 +107,42 @@ const updateRole = () => {
         </div>
       </div>
     </div>
-    <div class="row justify-content-center align-items-center">
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        <div class="mt-3 card card-light">
+          <div class="card-header">
+            <h4>Role with permission</h4>
+          </div>
+          <div class="card-body">
+            <table id="example2" class="table table-bordered table-striped table-hover">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Name</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="(rolePermission, index) in role.permissions" :key="index">
+                  <td>{{ index + 1 }}</td>
+                  <td>{{ rolePermission.name }}</td>
+                  <td>
+                    <Link
+                      @click="deletePermission([role.id, rolePermission.id])"
+                      as="button"
+                      class="m-1 btn btn-outline-danger"
+                      preserveScroll
+                      >Revoke</Link
+                    >
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <!-- </DataTable> -->
+          </div>
+        </div>
+      </div>
+
       <div class="col-lg-4">
         <div class="mt-3 card card-light">
           <div class="card-header">
@@ -107,14 +185,14 @@ const updateRole = () => {
                 <Link
                   :href="route('role.index')"
                   :disabled="form.processing"
-                  class="btn btn-secondary mr-1 w-100"
+                  class="btn btn-secondary mx-1 w-100"
                 >
                   Go Back
                 </Link>
                 <button
                   type="submit"
                   :disabled="form.processing"
-                  class="btn btn-primary ml-1 w-100"
+                  class="btn btn-primary mx-1 w-100"
                 >
                   Update
                 </button>

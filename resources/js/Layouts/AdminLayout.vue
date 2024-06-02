@@ -283,7 +283,7 @@ const { hasRole } = usePermission();
                 <li class="nav-item">
                   <Link :href="route('user.index')" class="nav-link">
                     <i class="far fa-circle nav-icon"></i>
-                    <p>User List</p>
+                    <p>Add NewUser</p>
                   </Link>
                 </li>
                 <li class="nav-item">
@@ -407,7 +407,7 @@ const { hasRole } = usePermission();
     </aside>
 
     <!-- Content Wrapper. Contains page content -->
-    <div class="content-wrapper" style="height: 100vh">
+    <div class="content-wrapper">
       <section class="content">
         <div class="container-fluid">
           <slot />

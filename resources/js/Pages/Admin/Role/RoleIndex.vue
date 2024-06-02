@@ -3,7 +3,7 @@ import AdminLayout from "@/Layouts/AdminLayout.vue";
 import { Link, Head, router, useForm, usePage } from "@inertiajs/vue3";
 import { toast } from "vue3-toastify";
 import { ref, onMounted, computed, defineProps, watch } from "vue";
-
+import VueMultiselect from "vue-multiselect";
 const props = defineProps({
   errors: Object,
   flash: {
@@ -11,10 +11,12 @@ const props = defineProps({
     failed: String,
   },
   roles: Object,
+  permissions: Array,
 });
 
 const form = useForm({
   role_name: "",
+  permissions: [],
 });
 let flashSuccess = computed(() => usePage().props.flash.success);
 let flashFailed = computed(() => usePage().props.flash.failed);
@@ -32,7 +34,7 @@ const createRole = () => {
         toast.success(flashSuccess, options);
         form.reset();
         router.visit(route("role.index"), {
-          only: ["roles"],
+          only: ["roles", "permissions"],
           preserveScroll: true,
         });
       } else if (usePage().props.flash.failed) {
@@ -98,7 +100,17 @@ onMounted(() => {
               <tbody>
                 <tr v-for="(role, index) in roles" :key="index">
                   <td>{{ index + 1 }}</td>
-                  <td>{{ role.name }}</td>
+                  <td>
+                    {{ role.name }}:
+
+                    <span
+                      v-for="(rolePermission, index) in role.permissions"
+                      :key="index"
+                      class="badge bg-success m-1"
+                    >
+                      {{ rolePermission.name }}
+                    </span>
+                  </td>
                   <td>
                     <Link
                       :href="route('role.edit', role.id)"
@@ -140,8 +152,17 @@ onMounted(() => {
                   {{ props.errors.role_name }}
                 </div>
               </div>
-
-              <div class="form-group d-flex justify-content-center">
+              <label for="inputRoleName" class="col-form-label">Permission</label>
+              <VueMultiselect
+                v-model="form.permissions"
+                :options="permissions"
+                :multiple="true"
+                :close-on-select="true"
+                placeholder="Pick some"
+                label="name"
+                track-by="id"
+              />
+              <div class="form-group mt-4">
                 <button
                   type="submit"
                   :disabled="form.processing"
@@ -157,3 +178,4 @@ onMounted(() => {
     </div>
   </AdminLayout>
 </template>
+<style src="vue-multiselect/dist/vue-multiselect.css"></style>

@@ -2,6 +2,9 @@
 
 use App\Http\Controllers\Backend\Admin\Category\CategoryController;
 use App\Http\Controllers\Backend\Admin\Permission\PermissionController;
+use App\Http\Controllers\Backend\Admin\RemoveRole\RemoveRoleFormUserController;
+use App\Http\Controllers\Backend\Admin\RevokePermission\RevokePermissionFormRoleController;
+use App\Http\Controllers\Backend\Admin\RevokePermission\RevokePermissionFormUserController;
 use App\Http\Controllers\Backend\Admin\Role\RoleController;
 use App\Http\Controllers\Backend\Admin\Tag\TagController;
 use App\Http\Controllers\Backend\Admin\User\UseProfilerController;
@@ -28,6 +31,9 @@ Route::get('/dashboard', function () {
 
 Route::middleware('auth')->group(function () {
     Route::get('/users', [UserController::class, 'index'])->name('user.index');
+    Route::post('/users/store', [UserController::class, 'store'])->name('user.store');
+    Route::get('/users/edit/{user_id}', [UserController::class, 'edit'])->name('user.edit');
+    Route::post('/users/update/{user_id}', [UserController::class, 'update'])->name('user.update');
     Route::get('/users/delete/{user_id}', [UserController::class, 'destroy'])->name('user.delete');
     Route::get('/users/profile', [UseProfilerController::class, 'index'])->name('user.profile.index');
     Route::post('/users/update/{id}', [UseProfilerController::class, 'update'])->name('user.profile.update');
@@ -60,6 +66,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/permission/edit/{permission_id}', [PermissionController::class, 'edit'])->name('permission.edit');
     Route::post('/permission/update/{permission_id}', [PermissionController::class, 'update'])->name('permission.update');
     Route::get('/permission/delete/{permission_id}', [PermissionController::class, 'destroy'])->name('permission.delete');
+
+
+    // Role and Permissions from Delete Routes List
+    Route::delete('/role/{role_id}/permissions/{permission_id}', RevokePermissionFormRoleController::class)->name('role.permission.destroy');
+    Route::delete('/users/{user}/permissions/{permission}', RevokePermissionFormUserController::class)->name('user.permission.destroy');
+    Route::delete('/users/{user}/roles/{role}', RemoveRoleFormUserController::class)->name('user.role.destroy');
 });
 
 

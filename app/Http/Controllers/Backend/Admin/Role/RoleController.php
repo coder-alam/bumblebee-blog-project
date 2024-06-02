@@ -17,12 +17,20 @@ use Spatie\Permission\Models\Role;
 class RoleController extends Controller {
     public function index(Request $request): Response {
         Inertia::setRootView('admin');
-        return Inertia::render('Admin/Role/RoleIndex', ['roles' => RoleResource::collection(Role::all())]);
+        $role = Role::all();
+        $role->load('permissions');
+        return Inertia::render('Admin/Role/RoleIndex', [
+            'roles' => RoleResource::collection($role),
+            'permissions' => PermissionResource::collection(Permission::all())
+        ]);
     }
 
     public function store(RoleRequest $request) {
-
         $role = Role::create(['name' => $request->role_name]);
+
+        if ($request->has('permissions')) {
+            $role->syncPermissions($request->input('permissions.*.name'));
+        }
         if ($role == true) {
             return to_route('role.index')->with('success', 'Role created successfully.');
         } else {
@@ -33,7 +41,7 @@ class RoleController extends Controller {
 
     public function edit($role_id): Response {
         $role = Role::findById($role_id);
-
+        $role->load('permissions');
         Inertia::setRootView('admin');
         return Inertia::render('Admin/Role/Edit', [
             'role' => new RoleResource($role),
@@ -44,16 +52,15 @@ class RoleController extends Controller {
     public function update(RoleRequest $request, $role_id): RedirectResponse {
 //        $request->validated();
         $role = Role::findById($role_id);
-
         $result = $role->update([
             'name' => $request->role_name,
             'updated_at' => Carbon::now()
         ]);
         $role->syncPermissions($request->input('permissions.*.name'));
         if ($result == true) {
-            return to_route('role.index')->with('success', 'Role updated successfully.');
+            return back()->with('success', 'Role updated successfully.');
         } else {
-            back()->with('failed', 'Role updated failed.');
+            return back()->with('failed', 'Role updated failed.');
         }
     }
 
